@@ -97,14 +97,22 @@ this situation arises.
 A timing test comparing performance on a $371 \times 371 \times 34$
 image showed that the flooding approach was significantly faster than
 the reconstruction approach. The results achieved on an AMD Athlon 64
-3000+ (1800MHz) with 512Kb cache and 4GB ram were:
+3000+ (1800MHz) with 512Kb cache and 4GB ram, using gcc 3.4.4 were:
 \begin{verbatim}
 > ./perf3D ESCells.img
 #F      concave rmin
 0       20.674  3.54
 1       24.456  5.074
 \end{verbatim}
-This is an approximately 5 fold reduction in computation time. Note
+On a very similar machine - Athlon(tm) 64 Processor 2800+ (1802.352
+MHz) with ???cache, 512 Mb of RAM and gcc 4.0.2 the results were:
+\begin{verbatim}
+> ./perf3D ../ESCells.img
+0       21.224  1.948
+1       24.611  3.075
+\end{verbatim}
+
+This is an approximately 5-10 fold reduction in computation time. Note
 that the left-most column indicates whether the filters were run in
 fully connected(1) or face connected mode.
 
@@ -117,12 +125,12 @@ this is a missing border region and probably an extra copy of the
 image.
 
 \section{Results - just to prove that it runs}
-% \begin{figure}[htbp]
-% \begin{center}
-% \includegraphics[scale=3]{reg_min_ov}
-% \caption{Regional minima found using the flooding method}
-% \end{center}
-% \end{figure}
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=3]{reg_min_ov}
+\caption{Regional minima found using the flooding method}
+\end{center}
+\end{figure}
 
 
 \section{Comparison of operations}
