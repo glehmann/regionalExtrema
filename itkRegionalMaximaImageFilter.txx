@@ -76,13 +76,13 @@ RegionalMaximaImageFilter<TInputImage, TOutputImage>
 
   // Delegate to the valued filter to find the minima
   typename ValuedRegionalMaximaImageFilter<TInputImage, TInputImage>::Pointer
-    rmin = ValuedRegionalMaximaImageFilter<TInputImage, TInputImage>::New();
-  rmin->SetInput( this->GetInput() );
-  rmin->SetFullyConnected( m_FullyConnected );
-  progress->RegisterInternalFilter( rmin, 0.67f );
-  rmin->Update();
+    rmax = ValuedRegionalMaximaImageFilter<TInputImage, TInputImage>::New();
+  rmax->SetInput( this->GetInput() );
+  rmax->SetFullyConnected( m_FullyConnected );
+  progress->RegisterInternalFilter( rmax, 0.67f );
+  rmax->Update();
 
-  if( rmin->GetFlat() )
+  if( rmax->GetFlat() )
     {
     ProgressReporter progress2(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels(), 33, 0.67, 0.33);
     ImageRegionIterator< TOutputImage > outIt(this->GetOutput(), this->GetOutput()->GetRequestedRegion() );
@@ -96,9 +96,9 @@ RegionalMaximaImageFilter<TInputImage, TOutputImage>
     {
     typedef BinaryThresholdImageFilter< InputImageType, OutputImageType > ThresholdType;
     typename ThresholdType::Pointer th = ThresholdType::New();
-    th->SetInput( rmin->GetOutput() );
-    th->SetUpperThreshold( rmin->GetMarkerValue() );
-    th->SetLowerThreshold( rmin->GetMarkerValue() );
+    th->SetInput( rmax->GetOutput() );
+    th->SetUpperThreshold( rmax->GetMarkerValue() );
+    th->SetLowerThreshold( rmax->GetMarkerValue() );
     th->SetOutsideValue( m_ForegroundValue );
     th->SetInsideValue( m_BackgroundValue );
     progress->RegisterInternalFilter( th, 0.33f );
