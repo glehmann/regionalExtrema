@@ -131,7 +131,7 @@ ADD_TEST(RMax3DfCompare ImageCompare ESCells-rmaxf.tif ESCells-rmaxf-ref.tif)
 
 
 ADD_TEST(FloatRMinF frmin 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rminF.png cthead1-rminF-float.png)
-ADD_TEST(FloatRMinFCompare ImageCompare cthead1-rminF.png cthead1-rminF-ref.png)
+ADD_TEST(FloatRMinFCompare ImageCompare cthead1-rminF.png cthead1-rminF-float.png)
 
 ADD_TEST(FloatRMinf frmin 0 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rminf.png cthead1-rminf-float.png)
 ADD_TEST(FloatRMinfCompare ImageCompare cthead1-rminf.png cthead1-rminf-float.png)
