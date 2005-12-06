@@ -74,25 +74,25 @@ TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 #any tests you can comment out or delete the following line.
 # ADD_TEST(Testname ExecutableToRun arg1 arg2 arg3)
 
-ADD_TEST(VRMinF vrmin 1 ${CMAKE_SOURCE_DIR}/threshold.png threshold-vrminF.png threshold-vrminF-ref.png)
-ADD_TEST(VRMinFCompare ImageCompare threshold-vrminF.png threshold-vrminF-ref.png)
+ADD_TEST(VRMinF vrmin 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-vrminF.png cthead1-vrminF-ref.png)
+ADD_TEST(VRMinFCompare ImageCompare cthead1-vrminF.png cthead1-vrminF-ref.png)
 
-ADD_TEST(VRMinf vrmin 0 ${CMAKE_SOURCE_DIR}/threshold.png threshold-vrminf.png threshold-vrminf-ref.png)
-ADD_TEST(VRMinfCompare ImageCompare threshold-vrminf.png threshold-vrminf-ref.png)
-
-
-ADD_TEST(VRMaxF vrmax 1 ${CMAKE_SOURCE_DIR}/threshold.png threshold-vrmaxF.png threshold-vrmaxF-ref.png)
-ADD_TEST(VRMaxFCompare ImageCompare threshold-vrmaxF.png threshold-vrmaxF-ref.png)
-
-ADD_TEST(VRMaxf vrmax 0 ${CMAKE_SOURCE_DIR}/threshold.png threshold-vrmaxf.png threshold-vrmaxf-ref.png)
-ADD_TEST(VRMaxfCompare ImageCompare threshold-vrmaxf.png threshold-vrmaxf-ref.png)
+ADD_TEST(VRMinf vrmin 0 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-vrminf.png cthead1-vrminf-ref.png)
+ADD_TEST(VRMinfCompare ImageCompare cthead1-vrminf.png cthead1-vrminf-ref.png)
 
 
-ADD_TEST(RMinF rmin 1 ${CMAKE_SOURCE_DIR}/threshold.png threshold-rminF.png threshold-rminF-ref.png)
-ADD_TEST(RMinFCompare ImageCompare threshold-rminF.png threshold-rminF-ref.png)
+ADD_TEST(VRMaxF vrmax 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-vrmaxF.png cthead1-vrmaxF-ref.png)
+ADD_TEST(VRMaxFCompare ImageCompare cthead1-vrmaxF.png cthead1-vrmaxF-ref.png)
 
-ADD_TEST(RMinf rmin 0 ${CMAKE_SOURCE_DIR}/threshold.png threshold-rminf.png threshold-rminf-ref.png)
-ADD_TEST(RMinfCompare ImageCompare threshold-rminf.png threshold-rminf-ref.png)
+ADD_TEST(VRMaxf vrmax 0 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-vrmaxf.png cthead1-vrmaxf-ref.png)
+ADD_TEST(VRMaxfCompare ImageCompare cthead1-vrmaxf.png cthead1-vrmaxf-ref.png)
+
+
+ADD_TEST(RMinF rmin 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rminF.png cthead1-rminF-ref.png)
+ADD_TEST(RMinFCompare ImageCompare cthead1-rminF.png cthead1-rminF-ref.png)
+
+ADD_TEST(RMinf rmin 0 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rminf.png cthead1-rminf-ref.png)
+ADD_TEST(RMinfCompare ImageCompare cthead1-rminf.png cthead1-rminf-ref.png)
 
 ADD_TEST(RMinBlack rmin 0 ${CMAKE_SOURCE_DIR}/black.png black-rminf.png black-rminf-ref.png)
 ADD_TEST(RMinBlackCompare ImageCompare black-rminf.png ${CMAKE_SOURCE_DIR}/white.png)
@@ -100,11 +100,11 @@ ADD_TEST(RMinBlackCompare ImageCompare black-rminf.png ${CMAKE_SOURCE_DIR}/white
 ADD_TEST(RMinWhite rmin 0 ${CMAKE_SOURCE_DIR}/white.png white-rminf.png white-rminf-ref.png)
 ADD_TEST(RMinWhiteCompare ImageCompare white-rminf.png ${CMAKE_SOURCE_DIR}/white.png)
 
-ADD_TEST(RMaxF rmax 1 ${CMAKE_SOURCE_DIR}/threshold.png threshold-rmaxF.png threshold-rmaxF-ref.png)
-ADD_TEST(RMaxFCompare ImageCompare threshold-rmaxF.png threshold-rmaxF-ref.png)
+ADD_TEST(RMaxF rmax 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rmaxF.png cthead1-rmaxF-ref.png)
+ADD_TEST(RMaxFCompare ImageCompare cthead1-rmaxF.png cthead1-rmaxF-ref.png)
 
-ADD_TEST(RMaxf rmax 0 ${CMAKE_SOURCE_DIR}/threshold.png threshold-rmaxf.png threshold-rmaxf-ref.png)
-ADD_TEST(RMaxfCompare ImageCompare threshold-rmaxf.png threshold-rmaxf-ref.png)
+ADD_TEST(RMaxf rmax 0 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rmaxf.png cthead1-rmaxf-ref.png)
+ADD_TEST(RMaxfCompare ImageCompare cthead1-rmaxf.png cthead1-rmaxf-ref.png)
 
 ADD_TEST(RMaxBlack rmax 0 ${CMAKE_SOURCE_DIR}/black.png black-rmaxf.png black-rmaxf-ref.png)
 ADD_TEST(RMaxBlackCompare ImageCompare black-rmaxf.png ${CMAKE_SOURCE_DIR}/white.png)
