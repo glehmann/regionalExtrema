@@ -74,6 +74,10 @@ SET(CurrentExe "frmax")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "exceptions")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 #the following line is an example of how to add a test to your project.
 #Testname is the title for this particular test.  ExecutableToRun is the
 #program which will be running this test.  It can either be a part of this
@@ -146,3 +150,5 @@ ADD_TEST(FloatRMaxFCompare ImageCompare cthead1-rmaxF.png cthead1-rmaxF-float.pn
 ADD_TEST(FloatRMaxf frmax 0 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rmaxf.png cthead1-rmaxf-float.png)
 ADD_TEST(FloatRMaxfCompare ImageCompare cthead1-rmaxf.png cthead1-rmaxf-float.png)
 
+
+ADD_TEST(Exceptions exceptions)
