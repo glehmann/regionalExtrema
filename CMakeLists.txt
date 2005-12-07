@@ -100,29 +100,43 @@ ADD_TEST(VRMaxf vrmax 0 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-vrmaxf.png cthea
 ADD_TEST(VRMaxfCompare ImageCompare cthead1-vrmaxf.png cthead1-vrmaxf-ref.png)
 
 
-ADD_TEST(RMinF rmin 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rminF.png cthead1-rminF-ref.png)
+ADD_TEST(RMinF rmin 1 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rminF.png cthead1-rminF-ref.png)
 ADD_TEST(RMinFCompare ImageCompare cthead1-rminF.png cthead1-rminF-ref.png)
 
-ADD_TEST(RMinf rmin 0 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rminf.png cthead1-rminf-ref.png)
+ADD_TEST(RMinf rmin 0 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rminf.png cthead1-rminf-ref.png)
 ADD_TEST(RMinfCompare ImageCompare cthead1-rminf.png cthead1-rminf-ref.png)
 
-ADD_TEST(RMinBlack rmin 0 ${CMAKE_SOURCE_DIR}/black.png black-rminf.png black-rminf-ref.png)
-ADD_TEST(RMinBlackCompare ImageCompare black-rminf.png ${CMAKE_SOURCE_DIR}/white.png)
-
-ADD_TEST(RMinWhite rmin 0 ${CMAKE_SOURCE_DIR}/white.png white-rminf.png white-rminf-ref.png)
-ADD_TEST(RMinWhiteCompare ImageCompare white-rminf.png ${CMAKE_SOURCE_DIR}/white.png)
-
-ADD_TEST(RMaxF rmax 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rmaxF.png cthead1-rmaxF-ref.png)
+ADD_TEST(RMaxF rmax 1 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rmaxF.png cthead1-rmaxF-ref.png)
 ADD_TEST(RMaxFCompare ImageCompare cthead1-rmaxF.png cthead1-rmaxF-ref.png)
 
-ADD_TEST(RMaxf rmax 0 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rmaxf.png cthead1-rmaxf-ref.png)
+ADD_TEST(RMaxf rmax 0 1 ${CMAKE_SOURCE_DIR}/cthead1.png cthead1-rmaxf.png cthead1-rmaxf-ref.png)
 ADD_TEST(RMaxfCompare ImageCompare cthead1-rmaxf.png cthead1-rmaxf-ref.png)
 
-ADD_TEST(RMaxBlack rmax 0 ${CMAKE_SOURCE_DIR}/black.png black-rmaxf.png black-rmaxf-ref.png)
-ADD_TEST(RMaxBlackCompare ImageCompare black-rmaxf.png ${CMAKE_SOURCE_DIR}/white.png)
 
-ADD_TEST(RMaxWhite rmax 0 ${CMAKE_SOURCE_DIR}/white.png white-rmaxf.png white-rmaxf-ref.png)
-ADD_TEST(RMaxWhiteCompare ImageCompare white-rmaxf.png ${CMAKE_SOURCE_DIR}/white.png)
+ADD_TEST(RMaxBlackM rmax 0 1 ${CMAKE_SOURCE_DIR}/black.png black-rmaxfM.png dummy.png)
+ADD_TEST(RMaxBlackMCompare ImageCompare black-rmaxfM.png ${CMAKE_SOURCE_DIR}/white.png)
+
+ADD_TEST(RMaxBlackm rmax 0 0 ${CMAKE_SOURCE_DIR}/black.png black-rmaxfm.png dummy.png)
+ADD_TEST(RMaxBlackmCompare ImageCompare black-rmaxfm.png ${CMAKE_SOURCE_DIR}/black.png)
+
+ADD_TEST(RMaxWhiteM rmax 0 1 ${CMAKE_SOURCE_DIR}/white.png white-rmaxf.png dummy.png)
+ADD_TEST(RMaxWhiteMCompare ImageCompare white-rmaxf.png ${CMAKE_SOURCE_DIR}/white.png)
+
+ADD_TEST(RMaxWhitem rmax 0 0 ${CMAKE_SOURCE_DIR}/white.png white-rmaxf.png dummy.png)
+ADD_TEST(RMaxWhitemCompare ImageCompare white-rmaxf.png ${CMAKE_SOURCE_DIR}/black.png)
+
+
+ADD_TEST(RMinBlackM rmin 0 1 ${CMAKE_SOURCE_DIR}/black.png black-rminfM.png dummy.png)
+ADD_TEST(RMinBlackMCompare ImageCompare black-rminfM.png ${CMAKE_SOURCE_DIR}/white.png)
+
+ADD_TEST(RMinBlackm rmin 0 0 ${CMAKE_SOURCE_DIR}/black.png black-rminfm.png dummy.png)
+ADD_TEST(RMinBlackmCompare ImageCompare black-rminfm.png ${CMAKE_SOURCE_DIR}/black.png)
+
+ADD_TEST(RMinWhiteM rmin 0 1 ${CMAKE_SOURCE_DIR}/white.png white-rminf.png dummy.png)
+ADD_TEST(RMinWhiteMCompare ImageCompare white-rminf.png ${CMAKE_SOURCE_DIR}/white.png)
+
+ADD_TEST(RMinWhitem rmin 0 0 ${CMAKE_SOURCE_DIR}/white.png white-rminf.png dummy.png)
+ADD_TEST(RMinWhitemCompare ImageCompare white-rminf.png ${CMAKE_SOURCE_DIR}/black.png)
 
 
 # ADD_TEST(RMin3DF rmin3D 1 ${CMAKE_SOURCE_DIR}/ESCells.img ESCells-rminF.tif ESCells-rminF-ref.tif)

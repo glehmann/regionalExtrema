@@ -61,12 +61,13 @@ int main(int, char * argv[])
 
   typedef itk::ImageFileReader< IType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( argv[2] );
+  reader->SetFileName( argv[3] );
 
   typedef itk::RegionalMinimaImageFilter< IType, IType > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( reader->GetOutput() );
   filter->SetFullyConnected( atoi(argv[1]) );
+  filter->SetFlatIsMinima( atoi(argv[2]) );
 
   typedef ProgressCallback< FilterType > ProgressType;
   ProgressType::Pointer progress = ProgressType::New();
@@ -75,7 +76,7 @@ int main(int, char * argv[])
   typedef itk::ImageFileWriter< IType > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetInput( filter->GetOutput() );
-  writer->SetFileName( argv[3] );
+  writer->SetFileName( argv[4] );
   writer->Update();
 
 
@@ -96,7 +97,7 @@ int main(int, char * argv[])
 
   WriterType::Pointer writer2 = WriterType::New();
   writer2->SetInput( rescale->GetOutput() );
-  writer2->SetFileName( argv[4] );
+  writer2->SetFileName( argv[5] );
   writer2->Update();
 
   // to verify if the image is flat or not
