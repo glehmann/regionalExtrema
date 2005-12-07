@@ -1,6 +1,7 @@
 #include "itkImageFileReader.h"
 
 #include "itkValuedRegionalMinimaImageFilter.h"
+#include "itkRegionalMinimaImageFilter.h"
 #include "itkHConcaveImageFilter.h"
 #include "itkGrayscaleDilateImageFilter.h"
 
@@ -26,7 +27,11 @@ int main(int, char * argv[])
   concave->SetInput( reader->GetOutput() );
   concave->SetHeight( 1 );
   
-  typedef itk::ValuedRegionalMinimaImageFilter< IType, IType > RMinType;
+  typedef itk::ValuedRegionalMinimaImageFilter< IType, IType > VRMinType;
+  VRMinType::Pointer vrmin = VRMinType::New();
+  vrmin->SetInput( reader->GetOutput() );
+  
+  typedef itk::RegionalMinimaImageFilter< IType, IType > RMinType;
   RMinType::Pointer rmin = RMinType::New();
   rmin->SetInput( reader->GetOutput() );
   
@@ -35,15 +40,18 @@ int main(int, char * argv[])
   
   std::cout << "#F" << "\t" 
             << "concave" << "\t" 
+            << "vrmin" << "\t" 
             << "rmin" << "\t" 
             << std::endl;
 
     itk::TimeProbe ctime;
+    itk::TimeProbe vrtime;
     itk::TimeProbe rtime;
 
   for(int F=0; F<=1; F++ )
     {
     concave->SetFullyConnected( F );
+    vrmin->SetFullyConnected( F );
     rmin->SetFullyConnected( F );
 
     for( int i=0; i<5; i++ )
@@ -52,6 +60,11 @@ int main(int, char * argv[])
       concave->Update();
       ctime.Stop();
       concave->Modified();
+
+      vrtime.Start();
+      vrmin->Update();
+      vrtime.Stop();
+      vrmin->Modified();
 
       rtime.Start();
       rmin->Update();
@@ -62,6 +75,7 @@ int main(int, char * argv[])
       
     std::cout << F << "\t" 
               << ctime.GetMeanTime() << "\t" 
+              << vrtime.GetMeanTime() << "\t" 
               << rtime.GetMeanTime() << "\t" 
               <<std::endl;
     }
