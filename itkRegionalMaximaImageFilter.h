@@ -111,6 +111,10 @@ public:
    * NumericTraits<PixelType>::NonpositiveMin(). */
   itkGetConstMacro(BackgroundValue, OutputImagePixelType);
 
+  itkSetMacro(FlatIsMaxima, bool);
+  itkGetConstMacro(FlatIsMaxima, bool);
+  itkBooleanMacro(FlatIsMaxima);
+
 protected:
   RegionalMaximaImageFilter();
   ~RegionalMaximaImageFilter() {};
@@ -134,7 +138,7 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   bool m_FullyConnected;
-
+  bool m_FlatIsMaxima;
   OutputImagePixelType m_ForegroundValue;
   OutputImagePixelType m_BackgroundValue;
 
