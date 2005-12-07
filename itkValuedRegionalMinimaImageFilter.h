@@ -1,7 +1,7 @@
 #ifndef __itkValuedRegionalMinimaImageFilter_h
 #define __itkValuedRegionalMinimaImageFilter_h
 
-#include "itkRegionalExtremaImageFilter.h"
+#include "itkValuedRegionalExtremaImageFilter.h"
 #include "itkNumericTraits.h"
 
 namespace itk {
@@ -9,14 +9,14 @@ namespace itk {
 template <class TInputImage, class TOutputImage>
 class ITK_EXPORT ValuedRegionalMinimaImageFilter :
     public
-    RegionalExtremaImageFilter<TInputImage, TOutputImage,
+    ValuedRegionalExtremaImageFilter<TInputImage, TOutputImage,
 			       std::less<typename TInputImage::PixelType>,
 			       std::less<typename TOutputImage::PixelType>
     >
 {
 public:
   typedef ValuedRegionalMinimaImageFilter Self;
-  typedef RegionalExtremaImageFilter<TInputImage, TOutputImage,
+  typedef ValuedRegionalExtremaImageFilter<TInputImage, TOutputImage,
 				     std::less<typename TInputImage::PixelType>,
 				     std::less<typename TOutputImage::PixelType>  > Superclass;
 
