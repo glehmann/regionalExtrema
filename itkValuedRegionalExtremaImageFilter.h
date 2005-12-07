@@ -13,8 +13,8 @@ namespace itk {
  * \brief Uses a flooding algorithm to set all voxels that are not a
  * regional extrema to the max or min of the pixel type. 
  *
- * This is the class used by RegionalMinimaImageFilter and
- * RegionalMaximaImageFilter. There is no supression of regional
+ * This is the class used by ValuedRegionalMinimaImageFilter and
+ * ValuedRegionalMaximaImageFilter. There is no supression of regional
  * minima based on dynamics, as available in HMinimaImageFilter. This
  * flooding algorithm is a very simple one, but I'm not sure where it
  * came from - I certainly didn't invent it.
@@ -43,8 +43,7 @@ namespace itk {
  * \author Richard Beare. Department of Medicine, Monash University,
  * Melbourne, Australia.
  *
- * \sa ValuedRegionalMinimaImageFilter, ValuedRegionalMaximaImageFilter,
- * HMinimaImageFilter
+ * \sa ValuedRegionalMinimaImageFilter, ValuedRegionalMaximaImageFilter, HMinimaImageFilter
  * \ingroup MathematicalMorphologyImageFilters
  */
 
@@ -98,9 +97,15 @@ public:
   itkGetConstReferenceMacro(FullyConnected, bool);
   itkBooleanMacro(FullyConnected);
   
+  /**
+   * Set/Get the value used to mark all pixels which are not extrema.
+   */
   itkSetMacro(MarkerValue, typename TInputImage::PixelType);
   itkGetConstReferenceMacro(MarkerValue, typename TInputImage::PixelType);
 
+  /**
+   * Get whether the image is flat or not.
+   */
   itkGetMacro(Flat, bool);
 
 protected:
