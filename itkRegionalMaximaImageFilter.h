@@ -27,7 +27,7 @@ namespace itk {
  * Regional maxima are flat zones surounded by pixels of lower value.
  *
  * If the input image is constant, the entire image can be considered as a maxima or not.
- * The SetFlatIsMaxima() method let the user choose which behavior to use.
+ * The desired behavior can be selected with the SetFlatIsMaxima() method.
  * 
  * \author Gaëtan Lehmann. Biologie du Développement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *

@@ -101,8 +101,10 @@ SetFlatIsMinima() and SetFlatIsMaxima() method let the user choose what to do
 in constant image case.
 
 \section{Implementation}
-
-TODO: Add something about the common templated class and functors.
+{\em itkValuedRegionalMaximaImageFilter} and {\em
+itkValuedRegionalMinimaImageFilter} are instatiations of {\em
+itkValuedRegionalExtremaImageFilter} using the standard library
+comparison functor to select between the two types of behavior.
 
 {\em itkRegionalMaximaImageFilter} and {\em itkRegionalMinimaImageFilter} are a sequence
 of filters and introduce some overhead compared to valued filters.
