@@ -3,9 +3,9 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkCommand.h"
-#include <itkIntensityWindowingImageFilter.h>
+#include "itkIntensityWindowingImageFilter.h"
 #include "itkCommand.h"
-#include <itkSimpleFilterWatcher.h>
+#include "itkSimpleFilterWatcher.h"
 
 
 

@@ -6,10 +6,10 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkCommand.h"
-#include <itkRescaleIntensityImageFilter.h>
-#include <itkAndImageFilter.h>
+#include "itkRescaleIntensityImageFilter.h"
+#include "itkAndImageFilter.h"
 #include "itkCommand.h"
-#include <itkSimpleFilterWatcher.h>
+#include "itkSimpleFilterWatcher.h"
 
 
 
@@ -58,16 +58,16 @@ int main(int, char * argv[])
   a->SetInput(0, rescale->GetOutput() );
   a->SetInput(1, reader->GetOutput() );
 
-  // all pixel which are not minima must have value=255
+  // all pixel which are not minima must have value=255.
   // get the non minima pixel by inverting the rescaled image
-  // minima have value=0 and non minima value=255
+  // we will have minima value=0 and non minima value=255
   typedef itk::InvertIntensityImageFilter< IType, IType > InvertType;
   InvertType::Pointer invert = InvertType::New();
   invert->SetInput( rescale->GetOutput() );
 
-  // get the highest value from "and" and from invert. The minima have value>=0 in and image
-  // and the non minima have a value =0. In invert, the non minima have a value=255 and the minima
-  // a value=0
+  // get the highest value from "a" and from invert. The minima have
+  // value>=0 in "a" image and the non minima have a value=0. In invert,
+  // the non minima have a value=255 and the minima a value=0
   typedef itk::MaximumImageFilter< IType, IType, IType > MaxType;
   MaxType::Pointer max = MaxType::New();
   max->SetInput(0, invert->GetOutput() );

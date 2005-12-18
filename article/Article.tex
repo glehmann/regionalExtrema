@@ -27,8 +27,10 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 
 %\release{1.00}
 
-\author{Richard Beare Gaetan Lehmann}
-% \authoraddress{Department of Medicine, Moansh University, Australia \and Unit\'e de Biologie du D\'eveloppement et de la Reproduction, Institut National de la Recherche Agronomique, 78350 Jouy-en-Josas, France}
+\author{Richard Beare
+Gaetan Lehmann}
+\authoraddress{Department of Medicine, Moansh University, Australia 
+Unit\'e de Biologie du D\'eveloppement et de la Reproduction, Institut National de la Recherche Agronomique, 78350 Jouy-en-Josas, France}
 
 
 \begin{document}
@@ -50,6 +52,8 @@ overview of the methods available in ITK and compares the performance
 with a new filter.
 \end{abstract}
 
+% \tableofcontents
+
 \section{Introduction}
 There are two classes of regional extrema - regional maxima and
 regional minima. Regional maxima are flat zones that are connected to
@@ -57,7 +61,8 @@ pixels of lower value while regional minima are flat zones that are
 connected to pixels of higher value. The notion of higher and lower is
 obviously critcal to the definition of regional maxima and minima,
 which means that it doesn't make sense to apply the definitions
-directly to vector images.
+directly to vector images. The notion of connectivity is also important
+to define which pixels are connected to others.
 
 \section{Filters currently available in ITK}
 Regional extrema are already used inside the ITK watershed
@@ -76,7 +81,7 @@ morhpological reconstruction. Regional minima are located as follows:
 create a marker image by adding $h$ to the original, carry out a
 reconstruction by erosion of the marker image using the original as
 the control surface, and then, finally, take the difference between
-them. If $h=1$ then any non-zero pixels are regional minima, if $h$ is
+them. If $h$=1 then any non-zero pixels are regional minima, if $h$ is
 greater than one then the non zero pixels are minima that are at least
 $h$ below the lowest surrounding ridge point. The value $h$ is often
 referred to as the {\em dynamic} of the minima, and is often used to
@@ -118,49 +123,70 @@ This algorithm requires that the image border is preset to the maximum
 value for the pixel type, which is done using a constant boundary
 condition.
 
+The flooding algorithm is hardly threadable and is not threaded in the provided
+implementation.
+
+The list of neighbors is influenced by the connectivty choosed. Two connectivity
+are available and controlled by the FullyConnected attribute. FullyConnected=true
+correspond to 8-connected in 2D, 26-connected in 3D. FullyConnected=false correspond
+to 4-connected in 2D and 6-connected in 3D.
+
+Most of the implementation is done in {\em ValuedRegionalExtremaImageFilter}.
+{\em ValuedRegionalMaximaImageFilter} and {\em
+ValuedRegionalMinimaImageFilter} are instantiations of {\em
+ValuedRegionalExtremaImageFilter} using the standard library
+comparison functor to select between the two types of behavior.
+
 \section{{\em RegionalMaximaImageFilter} and {\em RegionalMinimaImageFilter}}
-If an image is a constant it will be returned as a regional extrema or not,
-depending on value of the image. The filter will set a flag if
+With {\em ValuedRegionalExtremaImageFilter}, if an image is a constant, it will
+be returned as a regional extrema or not,
+depending on value of the image. The {\em ValuedRegionalExtremaImageFilter} will set a flag if
 this situation arises, so the user can decide to considere the entire image as an
-extrema or not.
+extrema or not. The flag can be retreive with \code{GetFlat()} method.
 
 To make this situation easier to manage, {\em RegionalMaximaImageFilter} and
 {\em RegionalMinimaImageFilter} have been created. They return the regional
 extrema in a binary image. Because the situation is not properly defined, the 
-SetFlatIsMinima() and SetFlatIsMaxima() method let the user choose what to do
+\code{SetFlatIsMinima()} and \code{SetFlatIsMaxima()} method let the user choose what to do
 in constant image case.
 
-\section{Implementation}
-{\em ValuedRegionalMaximaImageFilter} and {\em
-ValuedRegionalMinimaImageFilter} are instatiations of {\em
-ValuedRegionalExtremaImageFilter} using the standard library
-comparison functor to select between the two types of behavior.
-
-{\em RegionalMaximaImageFilter} and {\em RegionalMinimaImageFilter} are a sequence
+{\em RegionalMaximaImageFilter} and {\em RegionalMinimaImageFilter} are implemented as a sequence
 of filters and introduce some overhead compared to valued filters.
 
 \section{Performance}
 A timing test comparing performance on a $371 \times 371 \times 34$
 image showed that the flooding approach was significantly faster than
-the reconstruction approach. The results achieved on an AMD Athlon 64
-3000+ (1800MHz) with 512Kb cache and 4GB ram, using gcc 3.4.4 were:
-\begin{verbatim}
-> ./perf3D ESCells.img
-#F      concave rmin
-0       20.674  3.54
-1       24.456  5.074
-\end{verbatim}
-On a very similar machine - Athlon 64 Processor 2800+ (1802
-MHz) with 512Kb cache, 512 Mb of RAM and gcc 4.0.2 the results were:
-\begin{verbatim}
-> ./perf3D ../ESCells.img
-0       21.224  1.948
-1       24.611  3.075
-\end{verbatim}
+the reconstruction approach. The results\footnote{We had some problems
+to reproduce the results shown here. On some systems, running
+HConcaveImageFilter have an important impact on the execution time of the other
+filters. It might be necessary to separate the execution of the 
+HConcaveImageFilter and the other filters to reproduce the execution
+times.
 
-This is an approximately 5-10 fold reduction in computation time. Note
+See \url{http://public.kitware.com/pipermail/insight-users/2005-December/015916.html}
+for details.} achieved on an Athlon 64 
+Processor 2800+ (1802 MHz) with 512Kb cache, 512 Mb of RAM and gcc
+4.0.2 are shown in Table~\ref{perf}.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{cccc}
+\hline
+FullyConnected & h-concave & valued regional minima & non-valued regional minima \\
+\hline
+\hline
+false & 22.7868 s & 1.92568 s & 2.02878 s\\
+true  & 25.7276 s & 3.04492 s & 3.13012 s\\
+\hline
+\end{tabular}
+\caption{Execution time.\label{perf}}
+\end{table}
+
+The same test can be run with the command \code{./perf3D ../ESCells.img}.
+
+This is an approximately 10 fold reduction in computation time. Note
 that the left-most column indicates whether the filters were run in
-fully connected (1) or face connected (0) mode.
+fully connected or face connected mode.
 
 There are a few approaches that might be taken to improve performance
 further. For example, that standard face calculator might be used to
@@ -170,11 +196,15 @@ value, then there is no need for a boundary check at all. The cost of
 this is a missing border region and probably an extra copy of the
 image.
 
+It should be noted that the overhead of the {\em RegionalMinimaImageFilter}
+is quite small and should not be a problem in most of cases.
+
 \section{Results - just to prove that it runs}
+Figure~\ref{results} show the labelled (colored) minima on top of the original image.
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[scale=3]{reg_min_ov}
-\caption{Regional minima found using the flooding method}
+\includegraphics[scale=5]{reg_min_ov}
+\caption{Regional minima found using the flooding method.\label{results}}
 \end{center}
 \end{figure}
 
@@ -195,9 +225,8 @@ way to go.
 
 \section{Sample code}
 The following code is from {\tt vrmin.cxx}, and compares the operation
-of ValuedRegionalMinimaImageFilter and HConcaveImageFilter.
+of {\em ValuedRegionalMinimaImageFilter} and {\em HConcaveImageFilter}.
 
-\lstset{language=C,  basicstyle=\small}
 \small \begin{verbatim}
 // a test routine for regional extrema using flooding
 #include "itkValuedRegionalMinimaImageFilter.h"
@@ -207,48 +236,11 @@ of ValuedRegionalMinimaImageFilter and HConcaveImageFilter.
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkCommand.h"
-#include <itkRescaleIntensityImageFilter.h>
-#include <itkAndImageFilter.h>
+#include "itkRescaleIntensityImageFilter.h"
+#include "itkAndImageFilter.h"
 #include "itkCommand.h"
+#include "itkSimpleFilterWatcher.h"
 
-template < class TFilter >
-class ProgressCallback : public itk::Command
-{
-public:
-  typedef ProgressCallback   Self;
-  typedef itk::Command  Superclass;
-  typedef itk::SmartPointer<Self>  Pointer;
-  typedef itk::SmartPointer<const Self>  ConstPointer;
-
-  itkTypeMacro( IterationCallback, Superclass );
-  itkNewMacro( Self );
-
-  /** Type defining the optimizer. */
-  typedef    TFilter     FilterType;
-
-  /** Method to specify the optimizer. */
-  void SetFilter( FilterType * filter )
-    {
-    m_Filter = filter;
-    m_Filter->AddObserver( itk::ProgressEvent(), this );
-    }
-
-  /** Execute method will print data at each iteration */
-  void Execute(itk::Object *caller, const itk::EventObject & event)
-    {
-    Execute( (const itk::Object *)caller, event);
-    }
-
-  void Execute(const itk::Object *, const itk::EventObject & event)
-    {
-    std::cout << m_Filter->GetNameOfClass() << ": " 
-	<< m_Filter->GetProgress() << std::endl;
-    }
-
-protected:
-  ProgressCallback() {};
-  itk::WeakPointer<FilterType>   m_Filter;
-};
 
 
 int main(int, char * argv[])
@@ -266,10 +258,7 @@ int main(int, char * argv[])
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( reader->GetOutput() );
   filter->SetFullyConnected( atoi(argv[1]) );
-
-  typedef ProgressCallback< FilterType > ProgressType;
-  ProgressType::Pointer progress = ProgressType::New();
-  progress->SetFilter( filter );
+  itk::SimpleFilterWatcher watcher(filter, "filter");
 
   typedef itk::ImageFileWriter< IType > WriterType;
   WriterType::Pointer writer = WriterType::New();
@@ -299,18 +288,16 @@ int main(int, char * argv[])
   a->SetInput(0, rescale->GetOutput() );
   a->SetInput(1, reader->GetOutput() );
 
-  // all pixel which are not minima must have value=255
+  // all pixel which are not minima must have value=255.
   // get the non minima pixel by inverting the rescaled image
-  // minima have value=0 and non minima value=255
+  // we will have minima value=0 and non minima value=255
   typedef itk::InvertIntensityImageFilter< IType, IType > InvertType;
   InvertType::Pointer invert = InvertType::New();
   invert->SetInput( rescale->GetOutput() );
 
-  // get the highest value from "and" and from invert. 
-  // The minima have value>=0 in and image
-  // and the non minima have a value =0. In invert, 
-  // the non minima have a value=255 and the minima
-  // a value=0
+  // get the highest value from "a" and from invert. The minima have
+  // value>=0 in "a" image and the non minima have a value=0. In invert,
+  // the non minima have a value=255 and the minima a value=0
   typedef itk::MaximumImageFilter< IType, IType, IType > MaxType;
   MaxType::Pointer max = MaxType::New();
   max->SetInput(0, invert->GetOutput() );
@@ -321,19 +308,20 @@ int main(int, char * argv[])
   writer2->SetFileName( argv[4] );
   writer2->Update();
 
-  // to verify if the image is flat or not
-  filter->Print( std::cout );
-
   return 0;
 }
 \end{verbatim} \normalsize
 
 \section{Acknowledgments}
-We thank Dr Pierre Adenot and MIMA2 confocal facilities (http://mima2.jouy.inra.fr)
+We thank Dr Pierre Adenot and MIMA2 confocal facilities (\url{http://mima2.jouy.inra.fr})
 for providing image samples.
 
 \bibliographystyle{plain}
-\bibliography{InsightJournal}
+\bibliography{article,InsightJournal}
+
+\nocite{ITKSoftwareGuide}
+\nocite{Vincent93}
+\nocite{Soille2003}
 
 \end{document}
 

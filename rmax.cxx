@@ -6,10 +6,10 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkCommand.h"
-#include <itkRescaleIntensityImageFilter.h>
-#include <itkAndImageFilter.h>
+#include "itkRescaleIntensityImageFilter.h"
+#include "itkAndImageFilter.h"
 #include "itkCommand.h"
-#include <itkSimpleFilterWatcher.h>
+#include "itkSimpleFilterWatcher.h"
 
 
 
