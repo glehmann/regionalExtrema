@@ -1,15 +1,45 @@
-\documentclass{llncs}
+%
+% Complete documentation on the extended LaTeX markup used for Insight
+% documentation is available in ``Documenting Insight'', which is part
+% of the standard documentation for Insight.  It may be found online
+% at:
+%
+%     http://www.itk.org/
+
+\documentclass{InsightArticle}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  hyperref should be the last package to be loaded.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[dvips,
+bookmarks,
+bookmarksopen,
+backref,
+colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
+]{hyperref}
 \usepackage{graphicx}
 \usepackage{listings}
 
-\begin{document}
 \title{Finding regional extrema - methods and performance}
-\author{Richard Beare{$^1$} \and Gaetan Lehmann{$^2$}}
-\institute{Department of Medicine, Moansh University, Australia
-\and Unit\'e de Biologie du D\'eveloppement et de la Reproduction, Institut National de la Recherche Agronomique, 78350 Jouy-en-Josas, France}
+
+%\release{1.00}
+
+\author{Richard Beare Gaetan Lehmann}
+% \authoraddress{Department of Medicine, Moansh University, Australia \and Unit\'e de Biologie du D\'eveloppement et de la Reproduction, Institut National de la Recherche Agronomique, 78350 Jouy-en-Josas, France}
+
+
+\begin{document}
 \maketitle
 
+\ifhtml
+\chapter*{Front Matter\label{front}}
+\fi
+
 \begin{abstract}
+\noindent
 Finding regional extrema of images is an important step in a number of
 important morphological algorithms, such as some versions of the
 watershed transform. Regional extrema may also be important cues of
@@ -31,8 +61,8 @@ directly to vector images.
 
 \section{Filters currently available in ITK}
 Regional extrema are already used inside the ITK watershed
-implementation and may be computed using {\em itkHConvexImageFilter}
-and {\em itkHConcaveImageFilter}. 
+implementation and may be computed using {\em HConvexImageFilter}
+and {\em HConcaveImageFilter}. 
 
 The regional extrema computed in the watershed are not available
 externally (which could obviously be changed). The technique used in
@@ -62,7 +92,7 @@ equality, means that it is only possible to find extrema when the
 smallest step in image intensity is known. This is difficult to do
 sensibly on floating point image types.
 
-\section{{\em itkValuedRegionalMaximaImageFilter} and {\em itkValuedRegionalMinimaImageFilter}}
+\section{{\em ValuedRegionalMaximaImageFilter} and {\em ValuedRegionalMinimaImageFilter}}
 The new filters use a simple flooding approach to find regional
 extrema. They produce an output image with the non minima (maxima) set
 to the maximum (minimum) of the pixel type. The minima or maxima
@@ -88,25 +118,25 @@ This algorithm requires that the image border is preset to the maximum
 value for the pixel type, which is done using a constant boundary
 condition.
 
-\section{{\em itkRegionalMaximaImageFilter} and {\em itkRegionalMinimaImageFilter}}
+\section{{\em RegionalMaximaImageFilter} and {\em RegionalMinimaImageFilter}}
 If an image is a constant it will be returned as a regional extrema or not,
 depending on value of the image. The filter will set a flag if
 this situation arises, so the user can decide to considere the entire image as an
 extrema or not.
 
-To make this situation easier to manage, {\em itkRegionalMaximaImageFilter} and
-{\em itkRegionalMinimaImageFilter} have been created. They return the regional
+To make this situation easier to manage, {\em RegionalMaximaImageFilter} and
+{\em RegionalMinimaImageFilter} have been created. They return the regional
 extrema in a binary image. Because the situation is not properly defined, the 
 SetFlatIsMinima() and SetFlatIsMaxima() method let the user choose what to do
 in constant image case.
 
 \section{Implementation}
-{\em itkValuedRegionalMaximaImageFilter} and {\em
-itkValuedRegionalMinimaImageFilter} are instatiations of {\em
-itkValuedRegionalExtremaImageFilter} using the standard library
+{\em ValuedRegionalMaximaImageFilter} and {\em
+ValuedRegionalMinimaImageFilter} are instatiations of {\em
+ValuedRegionalExtremaImageFilter} using the standard library
 comparison functor to select between the two types of behavior.
 
-{\em itkRegionalMaximaImageFilter} and {\em itkRegionalMinimaImageFilter} are a sequence
+{\em RegionalMaximaImageFilter} and {\em RegionalMinimaImageFilter} are a sequence
 of filters and introduce some overhead compared to valued filters.
 
 \section{Performance}
@@ -168,7 +198,7 @@ The following code is from {\tt vrmin.cxx}, and compares the operation
 of ValuedRegionalMinimaImageFilter and HConcaveImageFilter.
 
 \lstset{language=C,  basicstyle=\small}
-\begin{lstlisting}
+\small \begin{verbatim}
 // a test routine for regional extrema using flooding
 #include "itkValuedRegionalMinimaImageFilter.h"
 #include "itkHConcaveImageFilter.h"
@@ -296,7 +326,7 @@ int main(int, char * argv[])
 
   return 0;
 }
-\end{lstlisting}
+\end{verbatim} \normalsize
 
 \section{Acknowledgments}
 We thank Dr Pierre Adenot and MIMA2 confocal facilities (http://mima2.jouy.inra.fr)
