@@ -35,7 +35,7 @@ eps: $(OUTPUT_EPS)
 
 ${NAME}.ps: ${NAME}.dvi
 	$(MAKE) eps
-	dvips -o ${NAME}.ps ${NAME}.dvi
+	dvips -R0 -o ${NAME}.ps ${NAME}.dvi
 
 
 ${NAME}.pdf: ${NAME}.ps
