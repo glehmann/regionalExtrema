@@ -22,14 +22,13 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 ]{hyperref}
 \usepackage{graphicx}
 \usepackage{listings}
-
+\usepackage{subfigure}
 \title{Finding regional extrema - methods and performance}
 
 %\release{1.00}
 
-\author{Richard Beare
-Gaetan Lehmann}
-\authoraddress{Department of Medicine, Moansh University, Australia 
+\author{Richard Beare and Gaetan Lehmann}
+\authoraddress{Department of Medicine, Moansh University, Australia.\\ 
 Unit\'e de Biologie du D\'eveloppement et de la Reproduction, Institut National de la Recherche Agronomique, 78350 Jouy-en-Josas, France}
 
 
@@ -43,15 +42,16 @@ Unit\'e de Biologie du D\'eveloppement et de la Reproduction, Institut National 
 \begin{abstract}
 \noindent
 Finding regional extrema of images is an important step in a number of
-important morphological algorithms, such as some versions of the
-watershed transform. Regional extrema may also be important cues of
-other tasks, such as splitting objects based on distance transform
-information\footnote{This work started because we were trying to
-compare different watershed algorithms}. This report provides an
-overview of the methods available in ITK and compares the performance
-with a new filter.
+morphological algorithms, such as some versions of the watershed
+transform\footnote{This work started because we were trying to compare
+different watershed algorithms}. Regional extrema may also be
+important cues of other tasks, such as splitting objects based on
+distance transform information. This report provides an overview of
+the methods available in ITK and compares the performance with a new
+filter.
 \end{abstract}
 
+\keyword{regional minima, flooding, performance}
 % \tableofcontents
 
 \section{Introduction}
@@ -200,14 +200,24 @@ It should be noted that the overhead of the {\em RegionalMinimaImageFilter}
 is quite small and should not be a problem in most of cases.
 
 \section{Results - just to prove that it runs}
-Figure~\ref{results} show the labelled (colored) minima on top of the original image.
+Figure~\ref{fig:artificial} show the labelled (colored) minima on top of
+a synthetic image while Figure ~\ref{fig:cthead1} shows the labelled
+maxima of the {\em cthead1} image.
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[scale=5]{reg_min_ov}
-\caption{Regional minima found using the flooding method.\label{results}}
+\subfigure[Connectivity = 4]{\includegraphics[scale=5]{reg_min_4_ov.pdf}\label{fig:artificial4}}
+\subfigure[Connectivity = 8]{\includegraphics[scale=5]{reg_min_8_ov.pdf}\label{fig:artificial8}}
+\caption{Regional minima found using the flooding method with connectivity of 4 and 8.\label{fig:artificial}}
 \end{center}
 \end{figure}
 
+\begin{figure}[htbp]
+\begin{center}
+\subfigure[Connectivity = 4]{\includegraphics[scale=1]{reg_max_4_ov.pdf}\label{fig:cthead4}}
+\subfigure[Connectivity = 8]{\includegraphics[scale=1]{reg_max_8_ov.pdf}\label{fig:cthead8}}
+\caption{Regional maxima of {\em cthead1} found using the flooding method with connectivity of 4 and 8.\label{fig:cthead1}}
+\end{center}
+\end{figure}
 
 \section{Comparison of operations}
 So which method is ``best''? Well, they are all a bit different, so
@@ -221,7 +231,7 @@ competitive. The reconstruction based approach is considerably slower,
 but is able to do a lot more. If you are interested in image dynamics
 rather than regional extrema then this is the only way to go. If you
 definitely want extrema then the new filter is currently the fastest
-way to go.
+option.
 
 \section{Sample code}
 The following code is from {\tt vrmin.cxx}, and compares the operation

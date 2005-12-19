@@ -57,7 +57,7 @@ int main(int, char * argv[])
     for( int i=0; i<5; i++ )
       {
       ctime.Start();
-      concave->Update();
+//      concave->Update();
       ctime.Stop();
       concave->Modified();
 
