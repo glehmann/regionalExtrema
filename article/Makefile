@@ -34,7 +34,6 @@ eps: $(OUTPUT_EPS)
 
 
 ${NAME}.ps: ${NAME}.dvi
-	$(MAKE) eps
 	dvips -R0 -o ${NAME}.ps ${NAME}.dvi
 
 
@@ -47,6 +46,7 @@ ${NAME}.bbl: ${BIBS} ${NAME}.aux
 
 
 ${NAME}.dvi: ${NAME}.tex  ${BIBS}
+	$(MAKE) eps
 	latex --interaction batchmode ${NAME}.tex
 	bibtex ${NAME}
 	latex --interaction batchmode ${NAME}.tex
