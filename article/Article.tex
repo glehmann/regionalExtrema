@@ -60,7 +60,7 @@ There are two classes of regional extrema - regional maxima and
 regional minima. Regional maxima are flat zones that are connected to
 pixels of lower value while regional minima are flat zones that are
 connected to pixels of higher value. The notion of higher and lower is
-obviously critcal to the definition of regional maxima and minima,
+obviously critical to the definition of regional maxima and minima,
 which means that it doesn't make sense to apply the definitions
 directly to vector images. The notion of connectivity is also important
 to define which pixels are connected to others.
@@ -111,11 +111,15 @@ The flooding approach is very simple, and proceeds, for minima detection, as fol
    \item If the the corresponding output 
 	 value is not maximal (meaning this pixel hasn't already been
       visited) then check all the neighbors. 
-    \item If any of the neighboring grey levels are less than the current pixel 
-      value, then this pixel cannot be a regional minima.
-    \item Flood fill the region, in the output image, with the same grey level 
-      as the current pixel that contains the current pixel, with the
-      maximal value for the pixel type.
+   \begin{itemize}
+      \item If any of the neighboring grey levels are less than the current pixel 
+        value, then this pixel cannot be a regional minima.
+      \begin{itemize}
+         \item Flood fill the region, in the output image, with the same grey level 
+          as the current pixel that contains the current pixel, with the
+          maximal value for the pixel type.
+      \end{itemize}
+    \end{itemize}	
     \end{itemize}
 \item Go to next input pixel.
 \end{itemize}
@@ -124,26 +128,33 @@ This algorithm requires that the image border is preset to the maximum
 value for the pixel type, which is done using a constant boundary
 condition.
 
-The flooding algorithm is hardly threadable and is not threaded in the provided
-implementation.
+It is generally quite difficult to produce efficient parallel parallel
+implementations of flooding algorithms, and no attempt has been made
+to make a threaded version of the new filter.
 
-The list of neighbors is influenced by the connectivty choosed. Two connectivity
-are available and controlled by the FullyConnected attribute. FullyConnected=true
-correspond to 8-connected in 2D, 26-connected in 3D. FullyConnected=false correspond
-to 4-connected in 2D and 6-connected in 3D.
+The pixel neighborhood is controlled by the {\em FullyConnected}
+attribute. All adjacent pixels are included in the neighborhood when
+FullyConnected=True and the diagonally adjacent pixels are not
+included when FullyConnected=False. Different terminology is often
+used to describe neighborhoods -- one common example is the
+``connectivity'' notation, which refers to the number of pixels in the
+neighborhood. FullyConnected=False corresponds to a connectivty of 4
+in 2D and 6 in 3D, while FullyConnected=True corresponds to a
+connectivity of 8 in 2D and 26 in 3D. FullyConnected=False is also
+commonly referred to as ``face connected''.
 
-Most of the implementation is done in {\em ValuedRegionalExtremaImageFilter}.
+The core implementation is done in {\em ValuedRegionalExtremaImageFilter}.
 {\em ValuedRegionalMaximaImageFilter} and {\em
 ValuedRegionalMinimaImageFilter} are instantiations of {\em
 ValuedRegionalExtremaImageFilter} using the standard library
 comparison functor to select between the two types of behavior.
 
 \section{{\em RegionalMaximaImageFilter} and {\em RegionalMinimaImageFilter}}
-With {\em ValuedRegionalExtremaImageFilter}, if an image is a constant, it will
-be returned as a regional extrema or not,
-depending on value of the image. The {\em ValuedRegionalExtremaImageFilter} will set a flag if
-this situation arises, so the user can decide to considere the entire image as an
-extrema or not. The flag can be retreive with \code{GetFlat()} method.
+A constant, or flat, image will be marked as a regional extrema by
+this filter due to the border condition mentioned earlier. The {\em
+ValuedRegionalExtremaImageFilter} will set a flag if this situation
+arises, so the user can decide to consider the entire image as an
+extrema or not. The flag can be retrieved with \code{GetFlat()} method.
 
 To make this situation easier to manage, {\em RegionalMaximaImageFilter} and
 {\em RegionalMinimaImageFilter} have been created. They return the regional
@@ -201,28 +212,28 @@ It should be noted that the overhead of the {\em RegionalMinimaImageFilter}
 is quite small and should not be a problem in most of cases.
 
 \section{Results - just to prove that it runs}
-Figure~\ref{fig:artificial} show the labelled (colored) minima on top of
+Figure~\ref{fig:artificial} shows the labelled (colored) minima on top of
 a synthetic image while Figure~\ref{fig:cthead1} shows the labelled
 maxima of the {\em cthead1} image.
 \begin{figure}[htbp]
 \begin{center}
-\subfigure[Connectivity = 4]{\includegraphics[scale=5]{reg_min_4_ov}\label{fig:artificial4}}
-\subfigure[Connectivity = 8]{\includegraphics[scale=5]{reg_min_8_ov}\label{fig:artificial8}}
+\subfigure[FullyConnected=False]{\includegraphics[scale=5]{reg_min_4_ov}\label{fig:artificial4}}
+\subfigure[FullyConnected=True]{\includegraphics[scale=5]{reg_min_8_ov}\label{fig:artificial8}}
 \caption{Regional minima found using the flooding method with connectivity of 4 and 8.\label{fig:artificial}}
 \end{center}
 \end{figure}
 
 \begin{figure}[htbp]
 \begin{center}
-\subfigure[Connectivity = 4]{\includegraphics[scale=1]{reg_max_4_ov}\label{fig:cthead4}}
-\subfigure[Connectivity = 8]{\includegraphics[scale=1]{reg_max_8_ov}\label{fig:cthead8}}
+\subfigure[FullyConnected=False]{\includegraphics[scale=1]{reg_max_4_ov}\label{fig:cthead4}}
+\subfigure[FullyConnected=True]{\includegraphics[scale=1]{reg_max_8_ov}\label{fig:cthead8}}
 \caption{Regional maxima of {\em cthead1} found using the flooding method with connectivity of 4 and 8.\label{fig:cthead1}}
 \end{center}
 \end{figure}
 
 \section{Comparison of operations}
 So which method is ``best''? Well, they are all a bit different, so
-the choice will be a bit application dependent. The labelling approach
+the choice will be application dependent. The labelling approach
 isn't currently available as standalone filter, so it is difficult to
 judge performance. The algorithm requires several steps, which may
 slow it down, but some of the steps are certain to visit the pixels in
