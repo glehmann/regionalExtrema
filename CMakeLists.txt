@@ -77,6 +77,14 @@ SET(CurrentExe "exceptions")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "crmax")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
+SET(CurrentExe "crmin")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 #the following line is an example of how to add a test to your project.
 #Testname is the title for this particular test.  ExecutableToRun is the
 #program which will be running this test.  It can either be a part of this
@@ -162,6 +170,19 @@ ADD_TEST(FloatRMaxFCompare ${IMAGE_COMPARE} cthead1-rmaxF.png cthead1-rmaxF-floa
 
 ADD_TEST(FloatRMaxf frmax 0 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1-rmaxf.png cthead1-rmaxf-float.png)
 ADD_TEST(FloatRMaxfCompare ${IMAGE_COMPARE} cthead1-rmaxf.png cthead1-rmaxf-float.png)
+
+
+ADD_TEST(Cthead1CRMaxF crmax 1 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1-crmaxF.png)
+ADD_TEST(Cthead1CRMaxFCompare ${IMAGE_COMPARE} cthead1-crmaxF.png ${CMAKE_SOURCE_DIR}/images/cthead1-crmaxF.png)
+
+ADD_TEST(Cthead1CRMaxf crmax 0 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1-crmaxf.png)
+ADD_TEST(Cthead1CRMaxfCompare ${IMAGE_COMPARE} cthead1-crmaxf.png ${CMAKE_SOURCE_DIR}/images/cthead1-crmaxf.png)
+
+ADD_TEST(ThresholdCRMinF crmin 1 ${CMAKE_SOURCE_DIR}/images/threshold.png threshold-crminF.png)
+ADD_TEST(ThresholdCRMinFCompare ${IMAGE_COMPARE} threshold-crminF.png ${CMAKE_SOURCE_DIR}/images/threshold-crminF.png)
+
+ADD_TEST(ThresholdCRMinf crmin 0 ${CMAKE_SOURCE_DIR}/images/threshold.png threshold-crminf.png)
+ADD_TEST(ThresholdCRMinfCompare ${IMAGE_COMPARE} threshold-crminf.png ${CMAKE_SOURCE_DIR}/images/threshold-crminf.png)
 
 
 ADD_TEST(Exceptions exceptions)
