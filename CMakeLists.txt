@@ -178,11 +178,11 @@ ADD_TEST(Cthead1CRMaxFCompare ${IMAGE_COMPARE} cthead1-crmaxF.png ${CMAKE_SOURCE
 ADD_TEST(Cthead1CRMaxf crmax 0 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1-crmaxf.png)
 ADD_TEST(Cthead1CRMaxfCompare ${IMAGE_COMPARE} cthead1-crmaxf.png ${CMAKE_SOURCE_DIR}/images/cthead1-crmaxf.png)
 
-ADD_TEST(ThresholdCRMinF crmin 1 ${CMAKE_SOURCE_DIR}/images/threshold.png threshold-crminF.png)
-ADD_TEST(ThresholdCRMinFCompare ${IMAGE_COMPARE} threshold-crminF.png ${CMAKE_SOURCE_DIR}/images/threshold-crminF.png)
+ADD_TEST(ArtificialCRMinF crmin 1 ${CMAKE_SOURCE_DIR}/images/artificial.png artificial-crminF.png)
+ADD_TEST(ArtificialCRMinFCompare ${IMAGE_COMPARE} artificial-crminF.png ${CMAKE_SOURCE_DIR}/images/artificial-crminF.png)
 
-ADD_TEST(ThresholdCRMinf crmin 0 ${CMAKE_SOURCE_DIR}/images/threshold.png threshold-crminf.png)
-ADD_TEST(ThresholdCRMinfCompare ${IMAGE_COMPARE} threshold-crminf.png ${CMAKE_SOURCE_DIR}/images/threshold-crminf.png)
+ADD_TEST(ArtificialCRMinf crmin 0 ${CMAKE_SOURCE_DIR}/images/artificial.png artificial-crminf.png)
+ADD_TEST(ArtificialCRMinfCompare ${IMAGE_COMPARE} artificial-crminf.png ${CMAKE_SOURCE_DIR}/images/artificial-crminf.png)
 
 
 ADD_TEST(Exceptions exceptions)
