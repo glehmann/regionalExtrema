@@ -82,6 +82,8 @@ int main(int, char * argv[])
   typedef itk::RescaleIntensityImageFilter< LIType, LIType > RescaleType;
   RescaleType::Pointer rescale = RescaleType::New();
   rescale->SetInput( connected->GetOutput() );
+  rescale->SetOutputMaximum( itk::NumericTraits< LPType >::max() );
+  rescale->SetOutputMinimum( itk::NumericTraits< LPType >::NonpositiveMin() );
 
   typedef itk::Functor::ScalarToRGBPixelFunctor< LPType > ColorMapFunctorType;
   typedef itk::UnaryFunctorImageFilter<LIType, CIType, ColorMapFunctorType> ColorMapFilterType;
