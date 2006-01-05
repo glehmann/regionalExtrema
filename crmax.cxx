@@ -1,38 +1,62 @@
 // a test routine for regional extrema using flooding
 #include "itkRegionalMaximaImageFilter.h"
-#include "itkNaryAddImageFilter.h"
-#include "itkInvertIntensityImageFilter.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkCommand.h"
-#include "itkAndImageFilter.h"
 #include "itkSimpleFilterWatcher.h"
-#include "itkComposeRGBImageFilter.h"
-#include "itkScalarToRGBPixelFunctor.h"
-#include "itkUnaryFunctorImageFilter.h"
+#include "itkBinaryFunctorImageFilter.h"
 #include "itkConnectedComponentImageFilter.h"
-#include "itkRescaleIntensityImageFilter.h"
 
-
-template< class TPixel >
-class AddRGB
+template< class TInputPixel, class TLabel, class TRGBPixel >
+class LabelOverlay
 {
 public:
-  AddRGB() {}
-  ~AddRGB() {}
-  inline TPixel operator()(  const TPixel & p1,
-                                 const TPixel & p2)
+  LabelOverlay()
+    {
+    TRGBPixel rgbPixel;
+    typename TRGBPixel::ValueType m = itk::NumericTraits< typename TRGBPixel::ValueType >::max();
+    typename TRGBPixel::ValueType z = itk::NumericTraits< typename TRGBPixel::ValueType >::Zero;
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( m, m/2, z); // orange 30
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( m, m, z); // yellow 60
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( m/2, m, z); // 90
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( z, m, z); // green 120
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( z, m, m/2); // 150
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( z, m, m); // cyan 180
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( z, m/2, m); // 210
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( z, z, m); // blue 240
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( m/2, z, m); // 270
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( m, z, m); // violet 300
+    m_Colors.push_back( rgbPixel );
+    rgbPixel.Set( m, z, m/2); // 330
+    m_Colors.push_back( rgbPixel );
+    }
+  ~LabelOverlay() {}
+  inline TRGBPixel operator()(  const TInputPixel & p1,
+                                 const TLabel & p2)
   {
-    TPixel rgbPixel;
-    rgbPixel.Set( p1.GetRed() + p2.GetRed(),
-                  p1.GetGreen() + p2.GetGreen(),
-                  p1.GetBlue() + p2.GetBlue());
-    return rgbPixel;
+    if( p2 == itk::NumericTraits< TLabel >::Zero )
+      {
+      typename TRGBPixel::ValueType p = static_cast< typename TRGBPixel::ValueType >( p1 );
+      TRGBPixel rgbPixel;
+      rgbPixel.Set( p, p, p );
+      return rgbPixel;
+      }
+    return m_Colors[ p2 % m_Colors.size() ];
   }
-  bool operator != (const AddRGB&) const
+  bool operator != (const LabelOverlay&) const
   {
     return false;
   }
+  std::vector< TRGBPixel > m_Colors;
 };
 
 
@@ -59,46 +83,20 @@ int main(int, char * argv[])
   filter->SetFullyConnected( atoi(argv[1]) );
   itk::SimpleFilterWatcher watcher(filter, "filter");
 
-  typedef itk::InvertIntensityImageFilter< IType, IType > InvertType;
-  InvertType::Pointer invert = InvertType::New();
-  invert->SetInput( filter->GetOutput() );
-  
-  typedef itk::AndImageFilter< IType, IType, IType > AndType;
-  AndType::Pointer a = AndType::New();
-  a->SetInput(0, invert->GetOutput() );
-  a->SetInput(1, reader->GetOutput() );
-  
-  typedef itk::ComposeRGBImageFilter< IType, CIType > ComposeType;
-  ComposeType::Pointer compose = ComposeType::New();
-  compose->SetInput( 0, a->GetOutput() );
-  compose->SetInput( 1, a->GetOutput() );
-  compose->SetInput( 2, a->GetOutput() );
-
   typedef itk::ConnectedComponentImageFilter< IType, LIType > ConnectedType;
   ConnectedType::Pointer connected = ConnectedType::New();
   connected->SetInput( filter->GetOutput() );
   connected->SetFullyConnected( atoi(argv[1]) );
 
-  typedef itk::RescaleIntensityImageFilter< LIType, LIType > RescaleType;
-  RescaleType::Pointer rescale = RescaleType::New();
-  rescale->SetInput( connected->GetOutput() );
-  rescale->SetOutputMaximum( itk::NumericTraits< LPType >::max() );
-  rescale->SetOutputMinimum( itk::NumericTraits< LPType >::NonpositiveMin() );
-
-  typedef itk::Functor::ScalarToRGBPixelFunctor< LPType > ColorMapFunctorType;
-  typedef itk::UnaryFunctorImageFilter<LIType, CIType, ColorMapFunctorType> ColorMapFilterType;
+  typedef LabelOverlay< PType, LPType, CPType > LabelOverlayType;
+  typedef itk::BinaryFunctorImageFilter< IType, LIType, CIType, LabelOverlayType > ColorMapFilterType;
   ColorMapFilterType::Pointer colormapper = ColorMapFilterType::New();
-  colormapper->SetInput( rescale->GetOutput() );
-
-  typedef AddRGB< CPType > RGBAddFunctorType;
-  typedef itk::BinaryFunctorImageFilter< CIType, CIType, CIType, RGBAddFunctorType > AddType;
-  AddType::Pointer add = AddType::New();
-  add->SetInput( 0, colormapper->GetOutput() );
-  add->SetInput( 1, compose->GetOutput() );
+  colormapper->SetInput1( reader->GetOutput() );
+  colormapper->SetInput2( connected->GetOutput() );
 
   typedef itk::ImageFileWriter< CIType > WriterType;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( add->GetOutput() );
+  writer->SetInput( colormapper->GetOutput() );
   writer->SetFileName( argv[3] );
   writer->Update();
 
