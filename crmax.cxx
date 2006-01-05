@@ -89,9 +89,9 @@ int main(int, char * argv[])
   connected->SetInput( filter->GetOutput() );
   connected->SetFullyConnected( atoi(argv[1]) );
 
-  typedef itk::RelabelComponentImageFilter< IType, LIType > RelabelType;
+  typedef itk::RelabelComponentImageFilter< LIType, LIType > RelabelType;
   RelabelType::Pointer relabel = RelabelType::New();
-  relabel->SetInput( filter->GetOutput() );
+  relabel->SetInput( connected->GetOutput() );
 
   typedef LabelOverlay< PType, LPType, CPType > LabelOverlayType;
   typedef itk::BinaryFunctorImageFilter< IType, LIType, CIType, LabelOverlayType > ColorMapFilterType;
