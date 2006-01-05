@@ -5,6 +5,7 @@
 #include "itkSimpleFilterWatcher.h"
 #include "itkBinaryFunctorImageFilter.h"
 #include "itkConnectedComponentImageFilter.h"
+#include "itkRelabelComponentImageFilter.h"
 
 template< class TInputPixel, class TLabel, class TRGBPixel >
 class LabelOverlay
@@ -88,11 +89,15 @@ int main(int, char * argv[])
   connected->SetInput( filter->GetOutput() );
   connected->SetFullyConnected( atoi(argv[1]) );
 
+  typedef itk::RelabelComponentImageFilter< IType, LIType > RelabelType;
+  RelabelType::Pointer relabel = RelabelType::New();
+  relabel->SetInput( filter->GetOutput() );
+
   typedef LabelOverlay< PType, LPType, CPType > LabelOverlayType;
   typedef itk::BinaryFunctorImageFilter< IType, LIType, CIType, LabelOverlayType > ColorMapFilterType;
   ColorMapFilterType::Pointer colormapper = ColorMapFilterType::New();
   colormapper->SetInput1( reader->GetOutput() );
-  colormapper->SetInput2( connected->GetOutput() );
+  colormapper->SetInput2( relabel->GetOutput() );
 
   typedef itk::ImageFileWriter< CIType > WriterType;
   WriterType::Pointer writer = WriterType::New();
