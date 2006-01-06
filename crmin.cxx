@@ -5,6 +5,7 @@
 #include "itkSimpleFilterWatcher.h"
 #include "itkBinaryFunctorImageFilter.h"
 #include "itkConnectedComponentImageFilter.h"
+#include "itkMultiThreader.h"
 
 template< class TInputPixel, class TLabel, class TRGBPixel >
 class LabelOverlay
@@ -63,12 +64,14 @@ public:
 
 int main(int, char * argv[])
 {
+  itk::MultiThreader::SetGlobalMaximumNumberOfThreads(1);
+
   const int dim = 2;
   
   typedef unsigned char PType;
   typedef itk::Image< PType, dim > IType;
 
-  typedef unsigned long LPType;
+  typedef unsigned int LPType;
   typedef itk::Image< LPType, dim > LIType;
 
   typedef itk::RGBPixel<unsigned char> CPType;

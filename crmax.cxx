@@ -5,7 +5,7 @@
 #include "itkSimpleFilterWatcher.h"
 #include "itkBinaryFunctorImageFilter.h"
 #include "itkConnectedComponentImageFilter.h"
-#include "itkRelabelComponentImageFilter.h"
+#include "itkMultiThreader.h"
 
 template< class TInputPixel, class TLabel, class TRGBPixel >
 class LabelOverlay
@@ -16,6 +16,7 @@ public:
     TRGBPixel rgbPixel;
     typename TRGBPixel::ValueType m = itk::NumericTraits< typename TRGBPixel::ValueType >::max();
     typename TRGBPixel::ValueType z = itk::NumericTraits< typename TRGBPixel::ValueType >::Zero;
+    rgbPixel.Set( m, z, z); // red 0
     m_Colors.push_back( rgbPixel );
     rgbPixel.Set( m, m/2, z); // orange 30
     m_Colors.push_back( rgbPixel );
@@ -63,12 +64,14 @@ public:
 
 int main(int, char * argv[])
 {
+  itk::MultiThreader::SetGlobalMaximumNumberOfThreads(1);
+
   const int dim = 2;
   
   typedef unsigned char PType;
   typedef itk::Image< PType, dim > IType;
 
-  typedef unsigned long LPType;
+  typedef unsigned int LPType;
   typedef itk::Image< LPType, dim > LIType;
 
   typedef itk::RGBPixel<unsigned char> CPType;
@@ -89,15 +92,11 @@ int main(int, char * argv[])
   connected->SetInput( filter->GetOutput() );
   connected->SetFullyConnected( atoi(argv[1]) );
 
-  typedef itk::RelabelComponentImageFilter< LIType, LIType > RelabelType;
-  RelabelType::Pointer relabel = RelabelType::New();
-  relabel->SetInput( connected->GetOutput() );
-
   typedef LabelOverlay< PType, LPType, CPType > LabelOverlayType;
   typedef itk::BinaryFunctorImageFilter< IType, LIType, CIType, LabelOverlayType > ColorMapFilterType;
   ColorMapFilterType::Pointer colormapper = ColorMapFilterType::New();
   colormapper->SetInput1( reader->GetOutput() );
-  colormapper->SetInput2( relabel->GetOutput() );
+  colormapper->SetInput2( connected->GetOutput() );
 
   typedef itk::ImageFileWriter< CIType > WriterType;
   WriterType::Pointer writer = WriterType::New();
