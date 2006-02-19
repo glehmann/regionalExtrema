@@ -44,12 +44,13 @@ int main(int, char * argv[])
             << "rmin" << "\t" 
             << std::endl;
 
+  for(int F=0; F<=1; F++ )
+    {
+
     itk::TimeProbe ctime;
     itk::TimeProbe vrtime;
     itk::TimeProbe rtime;
 
-  for(int F=0; F<=1; F++ )
-    {
     concave->SetFullyConnected( F );
     vrmin->SetFullyConnected( F );
     rmin->SetFullyConnected( F );
