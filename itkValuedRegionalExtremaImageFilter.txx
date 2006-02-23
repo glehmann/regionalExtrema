@@ -115,7 +115,6 @@ ValuedRegionalExtremaImageFilter<TInputImage, TOutputImage, TFunction1, TFunctio
     TFunction2 compareOut;
   
     outIt = outIt.Begin();
-  
     // set up the stack and neighbor list
     IndexStack IS;
     typename NOutputIterator::IndexListType IndexList;
@@ -186,6 +185,7 @@ ValuedRegionalExtremaImageFilter<TInputImage, TOutputImage, TFunction1, TFunctio
                 }
               }
 	    // end flooding
+	    break;
             }
           }
         }
